@@ -19,6 +19,11 @@ public class User {
         this.birthDate = birthDate;
     }
 
+    public User(int id, String username, String password, String email, String name, Date birthDate) {
+        this(username, password, email, name, birthDate);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
