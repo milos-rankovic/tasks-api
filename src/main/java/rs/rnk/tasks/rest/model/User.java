@@ -1,14 +1,19 @@
 package rs.rnk.tasks.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
 
     private int id;
     private String username;
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     private String email;
     private String name;
+    @JsonIgnore
     private Date birthDate;
 
     public User(String username, String password, String email, String name, Date birthDate) {
