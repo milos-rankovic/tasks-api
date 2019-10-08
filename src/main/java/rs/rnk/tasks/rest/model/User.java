@@ -2,11 +2,17 @@ package rs.rnk.tasks.rest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue
     private int id;
     private String username;
     @JsonIgnore
@@ -16,20 +22,24 @@ public class User {
     private String name;
     @JsonIgnore
     private Date birthDate;
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
-    public User(String username, String password, String email, String name, Date birthDate, List<Task> tasks) {
+    public User() {
+        tasks = new ArrayList<>();
+    }
+
+    public User(String username, String password, String email, String name, Date birthDate) {
+        this();
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.birthDate = birthDate;
-        this.tasks = tasks;
     }
 
-    public User(int id, String username, String password, String email, String name, Date birthDate, List<Task> tasks) {
-        this(username, password, email, name, birthDate, tasks);
+    public User(int id, String username, String password, String email, String name, Date birthDate) {
+        this(username, password, email, name, birthDate);
         this.id = id;
     }
 

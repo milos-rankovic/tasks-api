@@ -1,18 +1,41 @@
 package rs.rnk.tasks.rest.model;
 
-import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Time;
+
+@Entity
+@Table(name = "tasks")
 public class Task {
 
+    @Id
+    @GeneratedValue
     private int id;
     private String title;
     private String description;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private Date date;
-    private Date time;
+    private Time time;
+    @Column(name = "is_done")
     private boolean done;
 
-    public Task(String title, String description, User user, Date date, Date time, boolean done) {
+    public Task() {}
+
+    public Task(int id, String title, String description, Date date, Time time, boolean done) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.time = time;
+        this.done = done;
+    }
+
+    public Task(String title, String description, User user, Date date, Time time, boolean done) {
         this.title = title;
         this.description = description;
         this.user = user;
@@ -21,7 +44,7 @@ public class Task {
         this.done = done;
     }
 
-    public Task(int id, String title, String description, User user, Date date, Date time, boolean done, boolean allDay) {
+    public Task(int id, String title, String description, User user, Date date, Time time, boolean done, boolean allDay) {
         this(title, description, user, date, time, done);
         this.id = id;
     }
@@ -66,11 +89,11 @@ public class Task {
         this.date = date;
     }
 
-    public Date getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 
