@@ -26,6 +26,7 @@ public class User {
     @NotNull(message = "you must provide name")
     private String name;
     @NotNull(message = "you must provide birth date")
+    @Column(name = "birth_date")
     private Date birthDate;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
