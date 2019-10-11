@@ -4,8 +4,10 @@ package rs.rnk.tasks.rest.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
@@ -14,17 +16,24 @@ public class Task {
     @Id
     @GeneratedValue
     private int id;
+    @NotNull(message = "you must provide title")
     private String title;
     private String description;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     private Date date;
     private Time time;
     @Column(name = "is_done")
-    private boolean done;
+    private Boolean done;
 
-    public Task() {}
+    public Task() {
+    }
+
+    public Task(int id) {
+        this.id = id;
+    }
 
     public Task(int id, String title, String description, Date date, Time time, boolean done) {
         this.id = id;
@@ -97,11 +106,24 @@ public class Task {
         this.time = time;
     }
 
-    public boolean isDone() {
+    public Boolean isDone() {
         return done;
     }
 
-    public void setDone(boolean done) {
+    public void setDone(Boolean done) {
         this.done = done;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, user, date, time, done);
     }
 }

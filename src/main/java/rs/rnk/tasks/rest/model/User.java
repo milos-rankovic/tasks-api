@@ -3,6 +3,8 @@ package rs.rnk.tasks.rest.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +16,19 @@ public class User {
     @Id
     @GeneratedValue
     private int id;
+    @Size(min = 3, max = 50, message = "username must be between 3 and 50 characters")
+    @NotNull(message = "you must provide username")
     private String username;
-    @JsonIgnore
+    @NotNull(message = "you must provide password")
     private String password;
-    @JsonIgnore
+    @NotNull(message = "you must provide email")
     private String email;
+    @NotNull(message = "you must provide name")
     private String name;
-    @JsonIgnore
+    @NotNull(message = "you must provide birth date")
     private Date birthDate;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Task> tasks;
 
     public User() {

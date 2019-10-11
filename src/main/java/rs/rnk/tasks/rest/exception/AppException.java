@@ -1,10 +1,7 @@
 package rs.rnk.tasks.rest.exception;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class AppException extends Exception {
@@ -26,7 +23,8 @@ public class AppException extends Exception {
         this.httpStatus = httpStatus;
     }
 
-    public AppException() {}
+    public AppException() {
+    }
 
     public int getHttpStatus() {
         return httpStatus;
@@ -40,8 +38,9 @@ public class AppException extends Exception {
         return timestamp;
     }
 
-    public String getTimestampFormatted() {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    public String getTimestampFormatted(String pattern) {
+        // Pattern for Serbia: dd.MM.yyyy HH:mm:ss
+        SimpleDateFormat format = new SimpleDateFormat();
         return format.format(new Date(timestamp.getTime()));
     }
 

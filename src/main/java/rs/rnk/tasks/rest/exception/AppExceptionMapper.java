@@ -14,7 +14,7 @@ public class AppExceptionMapper implements ExceptionMapper<AppException> {
 
         appError.setCode(e.getCode());
         appError.setMessage(e.getMessage());
-        appError.setTimestamp(e.getTimestampFormatted());
+        appError.setTimestamp(e.getTimestamp().toString());
 
         return Response.status(e.getHttpStatus()).entity(appError).type(MediaType.APPLICATION_JSON).build();
     }
