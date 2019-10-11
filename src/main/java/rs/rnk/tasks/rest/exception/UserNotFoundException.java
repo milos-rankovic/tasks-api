@@ -7,6 +7,6 @@ public class UserNotFoundException extends AppException {
 
     public UserNotFoundException(int userId, String httpMethod, String endpoint, int httpStatus) {
         super(String.format(MESSAGE, userId), httpMethod, endpoint, 0, httpStatus);
-        this.setCode(httpStatus);
+        this.setCode(ERROR_CODE);
     }
 }
