@@ -14,7 +14,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     public List<Task> findByUser_Id(int userId);
 
     public Optional<Task> findByIdAndUser_Id(int id, int userId);
-    
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Task t WHERE t.user.id = (:userId)")

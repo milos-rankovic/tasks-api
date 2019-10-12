@@ -6,7 +6,8 @@ public class AppError {
     private String message;
     private String timestamp;
 
-    public AppError() { }
+    public AppError() {
+    }
 
     public String getMessage() {
         return message;

@@ -2,6 +2,8 @@ package rs.rnk.tasks.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.rnk.tasks.rest.exception.LoginException;
+import rs.rnk.tasks.rest.model.LoginInfo;
 import rs.rnk.tasks.rest.model.User;
 import rs.rnk.tasks.rest.repository.UserRepository;
 
@@ -14,6 +16,11 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public boolean checkLogin(User user, LoginInfo loginInfo) {
+        return user.getUsername().equals(loginInfo.getUsername())
+                && user.getPassword().equals(loginInfo.getPassword());
+    }
 
     public User findById(int id) {
         Optional<User> userOptional = userRepository.findById(id);
@@ -40,4 +47,8 @@ public class UserService {
         return userOptional.orElse(null);
     }
 
+    public User login(String username, String password) throws LoginException {
+        Optional<User> userOptional = userRepository.findByUsernameAndPassword(username, password);
+        return userOptional.orElse(null);
+    }
 }

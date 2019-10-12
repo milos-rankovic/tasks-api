@@ -14,7 +14,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Size(min = 3, max = 50, message = "username must be between 3 and 50 characters")
     @NotNull(message = "you must provide username")
