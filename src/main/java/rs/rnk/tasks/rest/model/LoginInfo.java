@@ -7,10 +7,10 @@ public class LoginInfo {
     private String username;
     private String password;
 
-    public LoginInfo() {
+    private LoginInfo() {
     }
 
-    public LoginInfo(String authHeader) {
+    private LoginInfo(String authHeader) {
         String credentialsEncoded = authHeader.substring(authHeader.indexOf(" ") + 1);
         String credentialsDecoded = new String(Base64.getDecoder().decode(credentialsEncoded));
         int colonIndex = credentialsDecoded.indexOf(":");
@@ -33,5 +33,20 @@ public class LoginInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public static class Builder {
+
+        private String authHeader;
+
+        public Builder(String authHeader) {
+            this.authHeader = authHeader;
+        }
+
+        public LoginInfo build() {
+            if(authHeader == null)
+                return null;
+            return new LoginInfo(this.authHeader);
+        }
     }
 }
