@@ -18,7 +18,8 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean checkLogin(User user, LoginInfo loginInfo) {
-        return user.getUsername().equals(loginInfo.getUsername())
+        return user != null && loginInfo != null
+                && user.getUsername().equals(loginInfo.getUsername())
                 && user.getPassword().equals(loginInfo.getPassword());
     }
 

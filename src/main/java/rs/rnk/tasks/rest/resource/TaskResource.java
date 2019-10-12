@@ -36,7 +36,7 @@ public class TaskResource {
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -55,7 +55,7 @@ public class TaskResource {
         User user = userService.findById(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -74,7 +74,7 @@ public class TaskResource {
         User user = userService.findById(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -91,7 +91,7 @@ public class TaskResource {
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -106,7 +106,7 @@ public class TaskResource {
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -128,7 +128,7 @@ public class TaskResource {
         User user = userService.findByIdAndFetchTasks(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());

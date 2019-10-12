@@ -29,7 +29,7 @@ public class UserResource {
         if (user == null)
             throw new UserNotFoundException(id, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
 
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -52,7 +52,7 @@ public class UserResource {
         if (user == null) {
             throw new UserNotFoundException(id, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         }
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -68,7 +68,7 @@ public class UserResource {
         User existingUser = userService.findById(id);
         if (existingUser == null)
             throw new UserNotFoundException(id, HttpMethod.PUT, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(existingUser, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
@@ -86,7 +86,7 @@ public class UserResource {
         if (existingUser == null)
             throw new UserNotFoundException(id, HttpMethod.PATCH, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
 
-        var loginInfo = new LoginInfo(authHeader);
+        var loginInfo = new LoginInfo.Builder(authHeader).build();
         boolean checkLogin = userService.checkLogin(existingUser, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
