@@ -2,8 +2,10 @@ package rs.rnk.tasks.rest.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import rs.rnk.tasks.rest.exception.LoginException;
 import rs.rnk.tasks.rest.exception.TaskNotFoundException;
 import rs.rnk.tasks.rest.exception.UserNotFoundException;
+import rs.rnk.tasks.rest.model.LoginInfo;
 import rs.rnk.tasks.rest.model.Task;
 import rs.rnk.tasks.rest.model.User;
 import rs.rnk.tasks.rest.service.TaskService;
@@ -28,13 +30,16 @@ public class TaskResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllByUserId(@PathParam("userId") int userId) throws UserNotFoundException {
+    public Response findAllByUserId(@PathParam("userId") int userId, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, LoginException {
 
         User user = userService.findById(userId);
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         List<Task> tasks = taskService.findAllByUserId(userId);
 
         return Response.ok(tasks).build();
@@ -45,11 +50,15 @@ public class TaskResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
             @PathParam("userId") int userId,
-            @PathParam("taskId") int taskId) throws UserNotFoundException, TaskNotFoundException {
+            @PathParam("taskId") int taskId,
+            @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, TaskNotFoundException, LoginException {
         User user = userService.findById(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
-
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         Task task = taskService.findByIdAndUserId(taskId, userId);
 
         if (task == null)
@@ -61,33 +70,46 @@ public class TaskResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@PathParam("userId") int userId, @Valid Task task) throws UserNotFoundException {
+    public Response create(@PathParam("userId") int userId, @Valid Task task, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, LoginException {
         User user = userService.findById(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         task.setUser(user);
+        task.setId(0);
         int createdTaskId = taskService.create(task);
         URI locationUri = UriBuilder.fromPath(uriInfo.getAbsolutePath().toString()).path(Integer.toString(createdTaskId)).build();
         return Response.created(locationUri).build();
     }
 
     @DELETE
-    public Response deleteAll(@PathParam("userId") int userId) throws UserNotFoundException {
+    public Response deleteAll(@PathParam("userId") int userId, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, LoginException {
         User user = userService.findById(userId);
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         taskService.deleteAll(userId);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @DELETE
     @Path("{taskId}")
-    public Response delete(@PathParam("userId") int userId, @PathParam("taskId") int taskId) throws TaskNotFoundException, UserNotFoundException {
+    public Response delete(@PathParam("userId") int userId, @PathParam("taskId") int taskId, @HeaderParam("Authorization") String authHeader) throws TaskNotFoundException, UserNotFoundException, LoginException {
         User user = userService.findByIdAndFetchTasks(userId);
 
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         if (!user.getTasks().contains(new Task(taskId)))
             throw new TaskNotFoundException(taskId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode(), userId);
         try {
@@ -102,10 +124,14 @@ public class TaskResource {
     @Path("{taskId}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response patch(@PathParam("userId") int userId, @PathParam("taskId") int taskId, Task task) throws UserNotFoundException, TaskNotFoundException {
+    public Response patch(@PathParam("userId") int userId, @PathParam("taskId") int taskId, Task task, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, TaskNotFoundException, LoginException {
         User user = userService.findByIdAndFetchTasks(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
+        var loginInfo = new LoginInfo(authHeader);
+        boolean checkLogin = userService.checkLogin(user, loginInfo);
+        if (!checkLogin)
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
         if (!user.getTasks().contains(new Task(taskId)))
             throw new TaskNotFoundException(taskId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode(), userId);
 
