@@ -23,6 +23,12 @@ public class UserService {
                 && user.getPassword().equals(loginInfo.getPassword());
     }
 
+    public User findByLoginInfo(LoginInfo loginInfo) {
+        return loginInfo != null ?
+                userRepository.findByUsernameAndPassword(loginInfo.getUsername(), loginInfo.getPassword()).orElse(null)
+                : null;
+    }
+
     public User findById(int id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null);
