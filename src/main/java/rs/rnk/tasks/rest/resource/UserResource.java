@@ -20,6 +20,19 @@ public class UserResource {
     @Context
     private UriInfo uriInfo;
 
+    @POST
+    @Path("login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(LoginInfo loginInfo) throws LoginException {
+        User user = userService.findByLoginInfo(loginInfo);
+
+        if(user == null) {
+            throw new LoginException(HttpMethod.POST, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+        }
+
+        return Response.ok(user).build();
+    }
 
     @GET
     @Path("{id}")
