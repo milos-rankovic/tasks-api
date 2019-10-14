@@ -20,11 +20,11 @@ public class UserResource {
     @Context
     private UriInfo uriInfo;
 
-    @POST
+    @GET
     @Path("login")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(LoginInfo loginInfo) throws LoginException {
+    public Response login(@HeaderParam("Authorization") String authHeader) throws LoginException {
+        LoginInfo loginInfo = new LoginInfo.Builder(authHeader).build();
         User user = userService.findByLoginInfo(loginInfo);
 
         if(user == null) {
