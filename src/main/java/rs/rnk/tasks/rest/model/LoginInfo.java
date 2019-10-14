@@ -44,7 +44,7 @@ public class LoginInfo {
         }
 
         public LoginInfo build() {
-            if(authHeader == null)
+            if (authHeader == null)
                 return null;
             return new LoginInfo(this.authHeader);
         }

@@ -37,9 +37,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         List<Task> tasks = taskService.findAllByUserId(userId);
 
         return Response.ok(tasks).build();
@@ -56,9 +59,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         Task task = taskService.findByIdAndUserId(taskId, userId);
 
         if (task == null)
@@ -75,9 +81,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         task.setUser(user);
         task.setId(0);
         int createdTaskId = taskService.create(task);
@@ -92,9 +101,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         taskService.deleteAll(userId);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -107,9 +119,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         if (!user.getTasks().contains(new Task(taskId)))
             throw new TaskNotFoundException(taskId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode(), userId);
         try {
@@ -129,9 +144,12 @@ public class TaskResource {
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         if (!user.getTasks().contains(new Task(taskId)))
             throw new TaskNotFoundException(taskId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode(), userId);
 

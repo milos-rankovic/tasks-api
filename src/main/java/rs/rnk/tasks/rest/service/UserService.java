@@ -2,7 +2,6 @@ package rs.rnk.tasks.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.rnk.tasks.rest.exception.LoginException;
 import rs.rnk.tasks.rest.model.LoginInfo;
 import rs.rnk.tasks.rest.model.User;
 import rs.rnk.tasks.rest.repository.UserRepository;
@@ -51,11 +50,6 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(id);
         // Call tasks.size() to fetch tasks from db, tasks fetch type: FetchType.LAZY
         userOptional.ifPresent((u) -> u.getTasks().size());
-        return userOptional.orElse(null);
-    }
-
-    public User login(String username, String password) throws LoginException {
-        Optional<User> userOptional = userRepository.findByUsernameAndPassword(username, password);
         return userOptional.orElse(null);
     }
 }
