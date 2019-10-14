@@ -25,10 +25,13 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@HeaderParam("Authorization") String authHeader) throws LoginException {
         LoginInfo loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         User user = userService.findByLoginInfo(loginInfo);
 
-        if(user == null) {
-            throw new LoginException(HttpMethod.POST, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+        if (user == null) {
+            throw new LoginException(HttpMethod.POST, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         }
 
         return Response.ok(user).build();
@@ -43,9 +46,12 @@ public class UserResource {
             throw new UserNotFoundException(id, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
 
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         return Response.ok(user).build();
     }
 
@@ -66,9 +72,12 @@ public class UserResource {
             throw new UserNotFoundException(id, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         }
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         userService.deleteById(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -82,9 +91,12 @@ public class UserResource {
         if (existingUser == null)
             throw new UserNotFoundException(id, HttpMethod.PUT, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(existingUser, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         user.setId(id);
         User updatedUser = userService.update(user);
         return Response.status(Response.Status.OK).entity(updatedUser).build();
@@ -100,9 +112,12 @@ public class UserResource {
             throw new UserNotFoundException(id, HttpMethod.PATCH, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
 
         var loginInfo = new LoginInfo.Builder(authHeader).build();
+        if (loginInfo == null) {
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.NO_AUTH_HEADER);
+        }
         boolean checkLogin = userService.checkLogin(existingUser, loginInfo);
         if (!checkLogin)
-            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
 
         if (user.getUsername() != null) {
             existingUser.setUsername(user.getUsername());
