@@ -23,6 +23,11 @@ public class TaskService {
         return taskOptional.orElse(null);
     }
 
+    public List<Task> findNotFinishedByUserId(int userId) {
+        List<Task> tasks = taskRepository.findByDoneAndUser_Id(false, userId);
+        return tasks;
+    }
+
     public int create(Task task) {
         return taskRepository.save(task).getId();
     }
