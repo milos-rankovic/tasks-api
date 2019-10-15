@@ -30,7 +30,7 @@ public class TaskResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllByUserId(@PathParam("userId") int userId, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, LoginException {
+    public Response findAllByUserId(@PathParam("userId") int userId, @HeaderParam("Authorization") String authHeader, @QueryParam("include-finished") boolean includeFinished) throws UserNotFoundException, LoginException {
 
         User user = userService.findById(userId);
 
@@ -43,7 +43,13 @@ public class TaskResource {
         boolean checkLogin = userService.checkLogin(user, loginInfo);
         if (!checkLogin)
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
-        List<Task> tasks = taskService.findAllByUserId(userId);
+
+        List<Task> tasks = null;
+
+        if (includeFinished)
+            tasks = taskService.findAllByUserId(userId);
+        else
+            tasks = taskService.findNotFinishedByUserId(userId);
 
         return Response.ok(tasks).build();
     }
