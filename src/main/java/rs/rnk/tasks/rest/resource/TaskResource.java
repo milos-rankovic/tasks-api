@@ -141,11 +141,11 @@ public class TaskResource {
         }
     }
 
-    @PATCH
+    @PUT
     @Path("{taskId}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response patch(@PathParam("userId") int userId, @PathParam("taskId") int taskId, Task task, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, TaskNotFoundException, LoginException {
+    public Response put(@PathParam("userId") int userId, @PathParam("taskId") int taskId, @Valid Task task, @HeaderParam("Authorization") String authHeader) throws UserNotFoundException, TaskNotFoundException, LoginException {
         User user = userService.findByIdAndFetchTasks(userId);
         if (user == null)
             throw new UserNotFoundException(userId, HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.NOT_FOUND.getStatusCode());
@@ -165,14 +165,14 @@ public class TaskResource {
         if (task.getTitle() != null)
             existingTask.setTitle(task.getTitle());
 
-        if (task.getDescription() != null)
-            existingTask.setDescription(task.getDescription());
 
-        if (task.getDate() != null)
-            existingTask.setDate(task.getDate());
+        existingTask.setDescription(task.getDescription());
 
-        if (task.getTime() != null)
-            existingTask.setTime(task.getTime());
+
+        existingTask.setDate(task.getDate());
+
+
+        existingTask.setTime(task.getTime());
 
         if (task.isDone() != null)
             existingTask.setDone(task.isDone());
