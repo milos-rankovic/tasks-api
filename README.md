@@ -8,12 +8,14 @@ RESTful API for managing to-do list. It contains the Task resource and the User 
 - [Spring DATA JPA](https://spring.io/projects/spring-data-jpa)
 - [Jersey as JAX-RS implementation](https://eclipse-ee4j.github.io/jersey/)
 - [Jackson for parsing and generating JSON](https://github.com/FasterXML/jackson)
-- [PostgreSQL as RDBMS](https://www.postgresql.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## Installation
-In order to run the API, you should clone the repository and edit the [application.properties](src/main/resources/application.properties) file. Provide the port (default is 8080), data source URL, username and password. After that, run the `mvn install` to download dependencies and start the API running the main method in the [TasksApiApplication](src/main/java/rs/rnk/tasks/rest/TasksApiApplication.java) class. The API will be available at the URL: [http://localhost:8080/](http://localhost:8080/).
+In order to run the API locally, you should clone the repository and edit the [application.properties](src/main/resources/application.properties) file. Provide the port (default is 8080), data source URL, username and password. After that, run the `mvn install` to download dependencies and start the API running the main method in the [TasksApiApplication](src/main/java/rs/rnk/tasks/rest/TasksApiApplication.java) class. The API will be available at the URL: [http://localhost:8080/](http://localhost:8080/).
 
 ## API Reference
+
+**API endpoints**
 
 All paths consume and produce data in the JSON format. The API is using basic authentication so you should send username and password in the authorization header (Base64 encoded) and use the API with HTTPS.
 
@@ -23,9 +25,9 @@ All paths consume and produce data in the JSON format. The API is using basic au
 
 `POST /users` - Add new user.
 
-`PATCH /users/{userId}` - Update the user with id `userId`. You should provide just those properties that you want to update.
+`PUT /users/{userId}` - Update the user with id `userId`. You must provide all required user properties.
 
-`PUT /users/{userId}` - Update the user with id `userId`. You must provide all user properties.
+`PATCH /users/{userId}` - Update the user with id `userId`. You should provide just those properties that you want to update.
 
 `GET /users/login` - Find the user with username and password given in the authorization header. The API doesn't manage the state, so you should handle and store login credentials on the client side.
 
@@ -35,7 +37,15 @@ All paths consume and produce data in the JSON format. The API is using basic au
 
 `DELETE /users/{userId}/tasks/{taskId}` - Delete the task with id `taskId` for the user with id `userId`.
 
+`DELETE /users/{userId}/tasks` - Delete all tasks for the user with id `userId`.
+
+`PUT /users/{userId}/tasks/{taskId}` - Update the task with id `taskId` for the user with id `userId`. You must provide all required task properties.
+
 `PATCH /users/{userId}/tasks/{taskId}` - Update the task with id `taskId` for the user with id `userId`. You should provide just those properties that you want to update.
+
+**Required fields**
+
+Required fields for the user resource are: `username`, `password`, `email`, `name` and `birthDate`. Required field for the task resource is just `title`.
 
 ## How to use
 
@@ -77,7 +87,7 @@ Error response template is given in the following JSON format:
 
 ## Example
 
-First step is to handle login. For the given username and password you should send the credentials in the authorization header as the "username:password" Base64 encoded string. If the provided credentials are correct you will get the response back, for example:
+First step is to handle login. For the given username and password you should send the credentials in the authorization header as the Base64 encoded string. If the provided credentials are correct you will get the response back, for example:
 
 
 
@@ -119,7 +129,7 @@ The next step is to send the request and get the tasks. For example, if you send
 ]
 ```
 
-When you want to edit the task just send the request `PATCH /users/{userId}/tasks/{taskId}` and provide properties to be edited in the request body. For example, to make the task with `id=77`, for the user with `id=1`, done you should send the request: `PATCH /isers/1/tasks/77` and put the following JSON data in the request body:
+When you want to edit the task just send the request `PATCH /users/{userId}/tasks/{taskId}` and provide properties to be edited in the request body. For example, to make the task with `id=77`, for the user with `id=1`, done you should send the request: `PATCH /users/1/tasks/77` and put the following JSON data in the request body:
 
 ```json
 {
