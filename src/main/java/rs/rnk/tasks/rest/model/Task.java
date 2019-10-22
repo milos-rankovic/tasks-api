@@ -26,7 +26,6 @@ public class Task {
     private Date date;
     private Time time;
     @Column(name = "is_done")
-    @NotNull
     private Boolean done;
 
     public Task() {
