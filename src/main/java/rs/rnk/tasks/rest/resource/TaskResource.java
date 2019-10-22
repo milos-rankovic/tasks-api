@@ -95,6 +95,10 @@ public class TaskResource {
             throw new LoginException(HttpMethod.GET, uriInfo.getAbsolutePath().toString(), Response.Status.UNAUTHORIZED.getStatusCode(), LoginException.WRONG_CREDENTIALS);
         task.setUser(user);
         task.setId(0);
+        if(task.isDone() == null || !task.isDone())
+            task.setDone(false);
+        else
+            task.setDone(true);
         int createdTaskId = taskService.create(task);
         URI locationUri = UriBuilder.fromPath(uriInfo.getAbsolutePath().toString()).path(Integer.toString(createdTaskId)).build();
         return Response.created(locationUri).build();
@@ -174,8 +178,9 @@ public class TaskResource {
 
         existingTask.setTime(task.getTime());
 
-        if (task.isDone() != null)
+        if(task.isDone() != null)
             existingTask.setDone(task.isDone());
+
 
         Task updatedTask = taskService.update(existingTask);
         return Response.ok(updatedTask).build();
