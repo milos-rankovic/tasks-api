@@ -13,6 +13,12 @@ RESTful API for managing to-do list. It contains the Task resource and the User 
 ## Installation
 In order to run the API locally, you should clone the repository and edit the [application.properties](src/main/resources/application.properties) file. Provide the port (default is 8080), data source URL, username and password. After that, run the `mvn install` to download dependencies and start the API running the main method in the [TasksApiApplication](src/main/java/rs/rnk/tasks/rest/TasksApiApplication.java) class. The API will be available at the URL: [http://localhost:8080/](http://localhost:8080/).
 
+Of course, you should have PostgreSQL database running. Database is very simple, with the following ER diagram:
+
+<p align="center">
+  <img src="er-diagram.jpg" /> 
+</p>
+
 ## API Reference
 
 **API endpoints**
