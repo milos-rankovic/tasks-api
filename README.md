@@ -1,5 +1,5 @@
 ## Tasks API
-RESTful API for managing to-do list. It contains the Task resource and the User resource, and corresponding endpoints for CRUD operations.
+RESTful API for managing to-do list. It contains the Task resource and the User resource, and corresponding endpoints for CRUD operations. The API is developed for [Tasks](https://github.com/milos-rankovic/tasks-android) Android application.
 
 <b>Built with</b>
 - [Java 11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
