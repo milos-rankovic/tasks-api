@@ -27,7 +27,7 @@ All paths consume and produce data in the JSON format. The API is using basic au
 
 `GET /users/{userId}` - Get information about the user with id `userId`.
 
-`DELETE /users{userId}` - Delete the user with id `userId`.
+`DELETE /users/{userId}` - Delete the user with id `userId`.
 
 `POST /users` - Add new user.
 
